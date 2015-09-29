@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Exam01</string>
+
+    <string name="mood">No mood yet</string>
+    <string name="mood_sad">Sad</string>
+    <string name="mood_mad">Mad</string>
+    <string name="mood_happy">Happy</string>
+    <string name="action_settings">Settings</string>
+</resources>

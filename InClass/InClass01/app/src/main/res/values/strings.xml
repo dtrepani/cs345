@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">InClass1</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="top">Main rockets</string>
+    <string name="middle">Boosters</string>
+    <string name="bottom">Stabilizers</string>
+    <string name="all_on">All systems go!</string>
+    <string name="action_settings">Settings</string>
+</resources>

@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">InClass02</string>
+
+    <string name="text_test">Click \"Test\" to test reflexes</string>
+    <string name="text_stop">Click button when you see it say \"STOP\"</string>
+    <string name="text_time">Your time: %1$.2f seconds.</string>
+    <string name="text_avg">Your average time: %1$.2f seconds.</string>
+    <string name="text_delay">Delay length:</string>
+    <string name="button_test">Test</string>
+    <string name="button_stop">Stop</string>
+    <string name="button_clear">Clear Average</string>
+    <string name="action_settings">Settings</string>
+</resources>

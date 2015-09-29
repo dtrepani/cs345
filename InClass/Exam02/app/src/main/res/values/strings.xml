@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Exam02</string>
+
+    <string name="count">Count</string>
+    <string name="button_presses">Button presses: %1$d</string>
+    <string name="app_started">App started: %1$s</string>
+    <string name="action_settings">Settings</string>
+</resources>

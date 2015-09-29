@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">PG1</string>
+
+    <string name="start">Start</string>
+    <string name="difficulty">Difficulty</string>
+    <string name="difficulty_normal">Normal</string>
+    <string name="difficulty_hard">Hard</string>
+    <string name="difficulty_message">Difficulty set to %1$s.</string>
+    <string name="score">Score: %1$d</string>
+    <string name="high_score">High Score: %1$d</string>
+    <string name="dialog_clear_high_score">Clear High Score</string>
+    <string name="timer">Time: %1$.2fs</string>
+    <string name="instructions">Tap as many circles as you can within the time limit.</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_game">PG1</string>
+
+    <string name="hello_world">Hello world!</string>
+</resources>
