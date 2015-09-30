@@ -1,8 +1,8 @@
 package com.bignerdranch.android.inclass03;
 
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -12,25 +12,59 @@ import android.widget.Button;
 public class InClass03 extends FragmentActivity {
 
     private static final String BURGER_FRAGMENT = "Burger Fragment";
+    private static final String TOPPINGS_FRAGMENT = "Toppings Fragment";
 
-    private Button buttonOne, buttonTwo;
+    private FragmentManager fm = getSupportFragmentManager();
+    private BurgerFragment burgerFragment = (BurgerFragment) fm.findFragmentByTag(BURGER_FRAGMENT);
+    private ToppingsFragment toppingsFragment = (ToppingsFragment) fm.findFragmentByTag(TOPPINGS_FRAGMENT);
+
+    private Button buttonBurger, buttonToppings;
+
+    private void detachAnyDisplayFragments() {
+        if( burgerFragment.isVisible() ) {
+            fm.beginTransaction()
+                    .detach(burgerFragment)
+                    .commit();
+        } else if( toppingsFragment.isVisible() ) {
+            fm.beginTransaction()
+                    .detach(toppingsFragment)
+                    .commit();
+        }
+    }
+
+    private void toggleFragments(String fragment) {
+        // if fragment is in fm, call attach; otherwise add
+        // is something being displayed? detach
+
+        detachAnyDisplayFragments();
+
+        // TODO: add toppings fragment
+        if( fragment == BURGER_FRAGMENT ) {
+            if( burgerFragment.isAdded() ) {
+                fm.beginTransaction()
+                        .attach(burgerFragment)
+                        .commit();
+            } else {
+                fm.beginTransaction()
+                        .add(R.id.fragment_holder, new BurgerFragment(), BURGER_FRAGMENT)
+                        .commit();
+            }
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_in_class03);
 
-        buttonOne = (Button)findViewById(R.id.button_one);
-        buttonTwo = (Button)findViewById(R.id.button_two);
+        buttonBurger = (Button)findViewById(R.id.button_one);
+        buttonToppings = (Button)findViewById(R.id.button_two);
 
-        buttonOne.setOnClickListener(new View.OnClickListener() {
+
+        buttonBurger.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FragmentManager fm = getSupportFragmentManager();
-
-                BurgerFragment burgerFragment = (BurgerFragment)fm.findFragmentById(R.id.fragment_holder);
-
-                if(burgerFragment == null) {
+                if (burgerFragment == null) {
                     fm.beginTransaction()
                             .add(R.id.fragment_holder, new BurgerFragment(), BURGER_FRAGMENT)
                             .commit();
@@ -42,10 +76,18 @@ public class InClass03 extends FragmentActivity {
             }
         });
 
-        buttonTwo.setOnClickListener(new View.OnClickListener() {
+        buttonToppings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                if (toppingsFragment == null) {
+                    fm.beginTransaction()
+                            .add(R.id.fragment_holder, new ToppingsFragment(), TOPPINGS_FRAGMENT)
+                            .commit();
+                } else {
+                    fm.beginTransaction()
+                            .remove(toppingsFragment)
+                            .commit();
+                }
             }
         });
     }
