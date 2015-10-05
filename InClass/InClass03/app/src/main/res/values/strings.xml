@@ -3,13 +3,12 @@
 
     <string name="layout_one">Add/Attach First Layout</string>
     <string name="layout_two">Add/Attach Second Layout</string>
-    <string name="burger">Double Burger</string>
+    <string name="burger_type">Burger</string>
+    <string name="burger_double">Double Burger</string>
+    <string name="burger_single">Single Burger</string>
     <string name="toppings">Toppings: %1$s</string>
     <string name="onions">Onions</string>
     <string name="pickles">Pickles</string>
     <string name="tomato">Tomato</string>
     <string name="action_settings">Settings</string>
-
-<!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
