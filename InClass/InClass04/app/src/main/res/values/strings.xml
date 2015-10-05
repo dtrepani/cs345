@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">InClass04</string>
+
+    <string name="terminal_output">Output</string>
+    <string name="enter_button">Enter</string>
+    <string name="action_settings">Settings</string>
+</resources>
