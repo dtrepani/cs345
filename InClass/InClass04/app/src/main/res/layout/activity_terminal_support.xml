@@ -20,12 +20,13 @@
         android:layout_toLeftOf="@id/enter_button"
         android:layout_alignParentBottom="true"/>
 
-    <TextView
-        android:id="@+id/terminal_output_text_view"
-        android:text="@string/terminal_output"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/terminal_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_above="@id/edit_text"/>
+        android:layout_above="@id/edit_text">
+
+    </android.support.v7.widget.RecyclerView>
 
 </RelativeLayout>

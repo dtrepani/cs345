@@ -21,4 +21,13 @@ public class TerminalAdapter extends RecyclerView.Adapter<TerminalViewHolder> {
         View v = inflater.inflate(R.layout.item_layout, parent, false);
         return new TerminalViewHolder(v);
     }
+
+    @Override
+    public void onBindViewHolder(TerminalViewHolder holder, int position) {
+        String output = mOutputs.get(position);
+        holder.bindOutput(output);
+    }
+
+    @Override
+    public int getItemCount() { return mOutputs.size(); }
 }

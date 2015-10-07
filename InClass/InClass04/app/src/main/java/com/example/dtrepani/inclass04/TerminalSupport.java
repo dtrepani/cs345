@@ -2,6 +2,7 @@ package com.example.dtrepani.inclass04;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,10 +17,8 @@ import java.util.List;
 public class TerminalSupport extends AppCompatActivity {
 
     private RecyclerView mTerminalRecyclerView;
-
     private Button mEnterButton;
     private EditText mEditText;
-    private TextView mTerminalTextView;
 
     private List<String> mOutputs;
 
@@ -32,12 +31,16 @@ public class TerminalSupport extends AppCompatActivity {
 
         mEnterButton = (Button)findViewById(R.id.enter_button);
         mEditText = (EditText)findViewById(R.id.edit_text);
-        mTerminalTextView = (TextView)findViewById(R.id.terminal_output_text_view);
+        mTerminalRecyclerView = (RecyclerView)findViewById(R.id.terminal_recycler_view);
+
+        mTerminalRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mTerminalRecyclerView.setAdapter(new TerminalAdapter(mOutputs));
 
         mEnterButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Adds the mEditText string to the arraylist and clears mEditText
+                mOutputs.add(mEditText.getText().toString());
+                mEditText.setText("");
             }
         });
     }
