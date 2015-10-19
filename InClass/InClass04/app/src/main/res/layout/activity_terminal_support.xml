@@ -18,7 +18,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_toLeftOf="@id/enter_button"
-        android:layout_alignParentBottom="true"/>
+        android:layout_alignParentBottom="true"
+        android:hint="Enter string."/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/terminal_recycler_view"

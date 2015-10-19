@@ -41,6 +41,7 @@ public class TerminalSupport extends AppCompatActivity {
             public void onClick(View v) {
                 mOutputs.add(mEditText.getText().toString());
                 mEditText.setText("");
+                mTerminalRecyclerView.getAdapter().notifyDataSetChanged();
             }
         });
     }
