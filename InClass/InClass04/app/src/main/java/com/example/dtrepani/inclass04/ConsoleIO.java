@@ -1,5 +1,8 @@
 package com.example.dtrepani.inclass04;
 
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,7 +17,10 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TerminalSupport extends AppCompatActivity {
+public class ConsoleIO extends AppCompatActivity {
+
+    private static final String TERMINAL_FRAGMENT = "terminalFragment";
+    private static ConsoleIO consoleIO;
 
     private RecyclerView mTerminalRecyclerView;
     private Button mEnterButton;
@@ -27,6 +33,7 @@ public class TerminalSupport extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_terminal_support);
 
+        consoleIO = this;
         mOutputs = new ArrayList<>();
 
         mEnterButton = (Button)findViewById(R.id.enter_button);
@@ -36,14 +43,40 @@ public class TerminalSupport extends AppCompatActivity {
         mTerminalRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mTerminalRecyclerView.setAdapter(new TerminalAdapter(mOutputs));
 
+        FragmentManager fm = getSupportFragmentManager();
+        Fragment mTerminalFragment = fm.findFragmentByTag(TERMINAL_FRAGMENT);
+
+        if(mTerminalFragment == null) {
+            mTerminalFragment = new TerminalFragment();
+            mTerminalFragment.setRetainInstance(true);
+
+            fm.beginTransaction()
+                    .add(mTerminalFragment, TERMINAL_FRAGMENT)
+                    .commit();
+        }
+
         mEnterButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mOutputs.add(mEditText.getText().toString());
-                mEditText.setText("");
-                mTerminalRecyclerView.getAdapter().notifyDataSetChanged();
+                // TODO: maybe move input and runnable to outside and set input in here
+                final String input = mEditText.getText().toString();
+
+                Runnable r = new Runnable() {
+                    @Override
+                    public void run() {
+                        printLine(input);
+                    }
+                };
+
+                runOnUiThread(r);
             }
         });
+    }
+
+    static void printLine(String input) {
+        consoleIO.mOutputs.add(input);
+        consoleIO.mEditText.setText("");
+        consoleIO.mTerminalRecyclerView.getAdapter().notifyDataSetChanged();
     }
 
     @Override
