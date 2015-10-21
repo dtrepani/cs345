@@ -20,6 +20,7 @@ import java.util.List;
 public class ConsoleIO extends AppCompatActivity {
 
     private static final String TERMINAL_FRAGMENT = "terminalFragment";
+    private static final String BUNDLE_OUTPUTS = "bundleOutputs";
     private static ConsoleIO consoleIO;
 
     private RecyclerView mTerminalRecyclerView;
@@ -28,21 +29,19 @@ public class ConsoleIO extends AppCompatActivity {
 
     private List<String> mOutputs;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_terminal_support);
+    static void printLine(final String input) {
+        Runnable r = new Runnable() {
+            @Override
+            public void run() {
+                consoleIO.mOutputs.add(input);
+                consoleIO.mEditText.setText("");
+                consoleIO.mTerminalRecyclerView.getAdapter().notifyDataSetChanged();
+            }
+        };
+        consoleIO.runOnUiThread(r);
+    }
 
-        consoleIO = this;
-        mOutputs = new ArrayList<>();
-
-        mEnterButton = (Button)findViewById(R.id.enter_button);
-        mEditText = (EditText)findViewById(R.id.edit_text);
-        mTerminalRecyclerView = (RecyclerView)findViewById(R.id.terminal_recycler_view);
-
-        mTerminalRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mTerminalRecyclerView.setAdapter(new TerminalAdapter(mOutputs));
-
+    private void createFragment() {
         FragmentManager fm = getSupportFragmentManager();
         Fragment mTerminalFragment = fm.findFragmentByTag(TERMINAL_FRAGMENT);
 
@@ -54,29 +53,36 @@ public class ConsoleIO extends AppCompatActivity {
                     .add(mTerminalFragment, TERMINAL_FRAGMENT)
                     .commit();
         }
+    }
 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_terminal_support);
+
+        consoleIO = this;
+        mOutputs = (savedInstanceState == null) ? new ArrayList<>() : (ArrayList)savedInstanceState.getStringArrayList(BUNDLE_OUTPUTS);
+        mEnterButton = (Button)findViewById(R.id.enter_button);
+
+        mEditText = (EditText)findViewById(R.id.edit_text);
         mEnterButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO: maybe move input and runnable to outside and set input in here
-                final String input = mEditText.getText().toString();
-
-                Runnable r = new Runnable() {
-                    @Override
-                    public void run() {
-                        printLine(input);
-                    }
-                };
-
-                runOnUiThread(r);
+                printLine(mEditText.getText().toString());
             }
         });
+
+        mTerminalRecyclerView = (RecyclerView)findViewById(R.id.terminal_recycler_view);
+        mTerminalRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mTerminalRecyclerView.setAdapter(new TerminalAdapter(mOutputs));
+
+        createFragment();
     }
 
-    static void printLine(String input) {
-        consoleIO.mOutputs.add(input);
-        consoleIO.mEditText.setText("");
-        consoleIO.mTerminalRecyclerView.getAdapter().notifyDataSetChanged();
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        savedInstanceState.putStringArrayList(BUNDLE_OUTPUTS, (ArrayList)mOutputs);
     }
 
     @Override
