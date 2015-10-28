@@ -1,0 +1,18 @@
+CREATE TABLE Company (id INTEGER PRIMARY KEY, name TEXT NOT NULL, revenue REAL);
+INSERT INTO Company (name, revenue) VALUES ('Toyota', 213.69), ('Honda', 114.79), ('Nissan', 110.24), ('Ford', 114.0);
+PRAGMA foreign_keys = ON;
+CREATE TABLE Car (carId INTEGER PRIMARY KEY, companyId INTEGER NOT NULL REFERENCES Company(id), model TEXT NOT NULL, unitsSold INTEGER);
+INSERT INTO Car (companyId, model, unitsSold) VALUES
+	((SELECT id FROM Company WHERE name='Toyota'), 'Camry', 428606),
+	((SELECT id FROM Company WHERE name='Toyota'), 'Corolla', 339498),
+	((SELECT id FROM Company WHERE name='Honda'), 'Accord', 388374),
+	((SELECT id FROM Company WHERE name='Honda'), 'Civic', 325981),
+	((SELECT id FROM Company WHERE name='Nissan'), 'Altima', 335644),
+	((SELECT id FROM Company WHERE name='Ford'), 'Fusion', 306861),
+	((SELECT id FROM Company WHERE name='Ford'), 'Focus', 219634);
+SELECT model FROM Car;
+UPDATE Company SET revenue=144.11 WHERE name='Ford';
+SELECT Company.name, SUM(Car.unitsSold) AS total, Company.revenue FROM Car JOIN Company ON Car.companyId=Company.id GROUP BY Company.name;
+DELETE FROM Car WHERE model='Civic';
+DELETE FROM Car WHERE unitsSold<321000;
+SELECT Company.name, COALESCE(SUM(Car.unitsSold),0) AS total, Company.revenue FROM Company LEFT JOIN Car ON Company.id=Car.companyId GROUP BY Company.name;
