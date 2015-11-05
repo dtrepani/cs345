@@ -3,8 +3,11 @@ package com.example.dtrepani.inclass06;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteStatement;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -12,7 +15,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-public class InClass05 extends AppCompatActivity {
+public class InClass06 extends AppCompatActivity {
+
+    private static final String TAG = "InClass06";
 
     private TextView mTextView;
     private EditText mEditText;
@@ -27,20 +32,39 @@ public class InClass05 extends AppCompatActivity {
 
         ContentValues timeStarted = new ContentValues();
         timeStarted.put("timeStarted", System.currentTimeMillis());
+        Log.d(TAG, "" + System.currentTimeMillis());
         mDatabase.update("Task", timeStarted, "name = ?", new String[] {taskName});
     }
 
     private void updateUI() {
-        Cursor cursor = mDatabase.rawQuery("SELECT name, timeSpent FROM Task", null);
+        updateTimeSpent();
+
+        Cursor cursor = mDatabase.rawQuery("SELECT * FROM Task", null);
 
         try {
+            mTextView.setText("");
             for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
-                mTextView.append(cursor.getString(cursor.getColumnIndex("name")) + ", " +
-                                    cursor.getInt(cursor.getColumnIndex("timeStarted")) + "\n");
+                long timeStarted = cursor.getInt(cursor.getColumnIndex("timeStarted"));
+                long timeSpent = cursor.getInt(cursor.getColumnIndex("timeSpent"));
+                //DateFormat.format("hh:mm:ss", name);
+
+                mTextView.append("Name: " + cursor.getString(cursor.getColumnIndex("name")) +
+                                ", timeStarted: " + timeStarted +
+                                ", timeSpent: " + timeSpent + "\n");
             }
         } finally {
             cursor.close();
         }
+    }
+
+    private int rawUpdate(String sq1, String[] args) {
+        SQLiteStatement stmt = mDatabase.compileStatement(sq1);
+        stmt.bindAllArgsAsStrings(args);
+        return stmt.executeUpdateDelete();
+    }
+
+    private void updateTimeSpent() {
+        rawUpdate("UPDATE Task SET timeSpent = timeSpent + ? - timeStarted", new String[] {"" + System.currentTimeMillis()});
     }
 
     @Override
@@ -59,6 +83,15 @@ public class InClass05 extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 insert(mEditText.getText().toString());
+                mEditText.setText("");
+                updateUI();
+            }
+        });
+
+        mDeleteTaskButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDatabase.delete("Task", "name = ?", new String[] { mEditText.getText().toString() });
                 mEditText.setText("");
                 updateUI();
             }
