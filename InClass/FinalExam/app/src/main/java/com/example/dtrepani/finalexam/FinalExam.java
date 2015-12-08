@@ -20,31 +20,31 @@ public class FinalExam extends AppCompatActivity {
 
     private static final String AVERAGE_DIALOG = "AverageDialog";
 
-    int numberOfEntries;
     private Button mButtonAdd, mButtonAverage, mButtonEducat;
     private EditText mEditText;
     private SQLiteDatabase mDatabase;
 
     private void insert(String number) {
-        ContentValues numberEntry = new ContentValues();
-        numberEntry.put("number", number);
-        mDatabase.insert("Number", null, numberEntry);
-        numberOfEntries++;
+        ContentValues values = new ContentValues();
+        values.put("number", number);
+        mDatabase.insert("Number", null, values);
     }
 
     private double getAverage() {
         double total = 0;
+        int numberOfEntries = 0;
         Cursor cursor = mDatabase.rawQuery("SELECT * FROM Number", null);
 
         try {
             for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
-                total += Double.parseDouble(cursor.getString(cursor.getColumnIndex("Number")));
+                total += cursor.getDouble(cursor.getColumnIndex("number"));
+                numberOfEntries++;
             }
         } finally {
             cursor.close();
         }
 
-        return total/numberOfEntries;
+        return (numberOfEntries == 0) ? 0 : total/numberOfEntries;
     }
 
     @Override

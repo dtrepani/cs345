@@ -31,7 +31,7 @@ public class AverageDialogFragment extends DialogFragment {
         View v = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_layout, null);
 
         mTextAverage = (TextView)v.findViewById(R.id.text_average);
-        mTextAverage.setText((String)getArguments().getSerializable(AVERAGE));
+        mTextAverage.setText(String.valueOf(getArguments().getSerializable(AVERAGE)));
 
         AlertDialog a = new AlertDialog.Builder(getActivity())
                 .setTitle("Average")
