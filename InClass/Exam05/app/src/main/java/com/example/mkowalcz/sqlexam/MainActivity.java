@@ -1,32 +1,103 @@
 package com.example.mkowalcz.sqlexam;
 
+import android.content.ContentValues;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteStatement;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
-    private TextView textView;
-    private EditText editText1, editText2;
-    private Button button1, button2, button3;
+
+    private TextView mTextView;
+    private EditText mEditTextTitle, mEditTextISBN;
+    private Button mButtonInsert, mButtonUpdate, mButtonDelete;
+
+    private SQLiteDatabase mDatabase;
+
+    private void insert(String title, String isbn) {
+        ContentValues values = new ContentValues();
+        values.put("title", title);
+        values.put("isbn", Integer.parseInt(isbn));
+        mDatabase.insert("Book", null, values);
+    }
+
+    private void updateUI() {
+        Cursor cursor = mDatabase.rawQuery("SELECT * FROM Book", null);
+
+        try {
+            mTextView.setText("");
+            for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
+                mTextView.append(cursor.getString(cursor.getColumnIndex("title")) + " " +
+                                 cursor.getInt(cursor.getColumnIndex("isbn")) + "\n");
+            }
+        } finally {
+            cursor.close();
+        }
+    }
+
+    private int rawUpdate(String sq1, String[] args) {
+        SQLiteStatement stmt = mDatabase.compileStatement(sq1);
+        stmt.bindAllArgsAsStrings(args);
+        return stmt.executeUpdateDelete();
+    }
+
+    private void clearEditText() {
+        mEditTextTitle.setText("");
+        mEditTextISBN.setText("");
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        textView = (TextView)findViewById(R.id.text_view);
+        mTextView = (TextView)findViewById(R.id.text_view);
 
-        editText1 = (EditText)findViewById(R.id.edit_text1);
-        editText2 = (EditText)findViewById(R.id.edit_text2);
+        mEditTextTitle = (EditText)findViewById(R.id.edit_text_title);
+        mEditTextISBN = (EditText)findViewById(R.id.edit_text_isbn);
 
-        button1 = (Button)findViewById(R.id.button1);
-        button2 = (Button)findViewById(R.id.button2);
-        button3 = (Button)findViewById(R.id.button3);
+        mButtonInsert = (Button)findViewById(R.id.button_insert);
+        mButtonUpdate = (Button)findViewById(R.id.button_update);
+        mButtonDelete = (Button)findViewById(R.id.button_delete);
+
+        mDatabase = new DatabaseHelper(getApplicationContext()).getWritableDatabase();
+
+        mButtonInsert.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                insert(mEditTextTitle.getText().toString(), mEditTextISBN.getText().toString());
+                clearEditText();
+                updateUI();
+            }
+        });
+
+        mButtonUpdate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                rawUpdate("UPDATE Book SET title = ? WHERE isbn = ?",
+                        new String[] { mEditTextTitle.getText().toString(), mEditTextISBN.getText().toString() });
+                clearEditText();
+                updateUI();
+            }
+        });
+
+        mButtonDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDatabase.delete("Book", "isbn = ?", new String[] { mEditTextISBN.getText().toString() });
+                clearEditText();
+                updateUI();
+            }
+        });
+
+        updateUI();
     }
 
     @Override

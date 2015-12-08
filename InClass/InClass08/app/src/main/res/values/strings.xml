@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">InClass08</string>
+
+    <string name="get_request">Get</string>
+    <string name="post_request">Post</string>
+    <string name="enter_text">Enter Text</string>
+    <string name="action_settings">Settings</string>
+</resources>
